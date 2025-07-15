@@ -1,0 +1,37 @@
+server:
+    port: 8082
+
+spring:
+    application:
+        name: auth
+
+    datasource:
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: ${SPRING_JPA_SHOW_SQL:false}
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    liquibase:
+        enabled: true
+        change-log: classpath:db/db.changelog-master.yaml
+security:
+    jwt:
+        secret_key: b55a3f4a6400c4ef85c16187653713004986bace196af0d78c24b0d1ca26cd9a
+        access_token_expiration: 3600000
+        refresh_token_expiration: 60480000
+springdoc:
+    api-docs:
+        path: /api-docs
+        packages-to-scan:
+            - com.auth.controllers
+
+    swagger-ui:
+        path: /swagger-ui.html
+        url: /api-docs/swagger-config
