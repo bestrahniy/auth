@@ -53,6 +53,8 @@ public class UserService implements UserDetailsService {
 
     private final RefreshTokensRepository refreshTokensRepository;
 
+    private final ContractorConnect contractorConnect;
+
     /**
      * register new user in priject and hashing his password by custom hash with soled
      * @param registerNewUserDto dto with data of new user
@@ -137,7 +139,8 @@ public class UserService implements UserDetailsService {
 
         jwtTokenService.saveRefreshToken(refreshToken);
 
-        dealConnect.connectDeal(refreshToken);
+        dealConnect.connectDeal(accessToken);
+        contractorConnect.connectContractor(accessToken);
 
         return new AuthResponseDto(accessToken, refreshToken);
     }
