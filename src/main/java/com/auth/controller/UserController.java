@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.auth.dto.AuthorisateUserDto;
 import com.auth.dto.RegisterNewUserDto;
+import com.auth.dto.UserRolesDto;
 import com.auth.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,12 +57,21 @@ public class UserController {
         return ResponseEntity.ok(userService.authorisateUser(authorisateUserDto));
     }
 
+    @Operation(
+        summary = "add user the new roles",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "add role successful (returns JWT token)"),
+            @ApiResponse(responseCode = "400", description = "Invalid request format"),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials (wrong username/password)"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
+    )
     @PostMapping("/user-roles/save")
     public ResponseEntity<?> addRolesDeal(
-        @RequestHeader("Authorization") String authHeader,
-        @RequestBody @Valid UserRolesDto dto
-    ) {
-        return ResponseEntity.ok()
+        @RequestHeader("Authorization") String adminToken,
+        @Valid @RequestBody UserRolesDto userRolesDto) throws Exception {
+        return ResponseEntity.ok(userService.addNewRoleUser(userRolesDto));
     }
 
 }
