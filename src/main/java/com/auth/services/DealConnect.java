@@ -8,6 +8,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * class for connect deal method
+ */
 @Service
 public class DealConnect {
 
@@ -20,6 +23,11 @@ public class DealConnect {
             .build();
     }
 
+    /**
+     * connect deal service and send access token
+     * @param token access token
+     * @return header response
+     */
     public String connectDeal(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(token);
