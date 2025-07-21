@@ -1,0 +1,158 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_table
+      author: ilya
+      changes:
+        - createTable:
+            tableName: "users"
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: login
+                  type: text
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - createTable:
+            tableName: "roles"
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: role
+                  type: text
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        - createTable:
+            tableName: "user_roles"
+            columns:
+              - column:
+                  name: id_user
+                  type: INTEGER
+              - column:
+                  name: id_role
+                  type: INTEGER
+
+        - createTable:
+            tableName: "refresh_tokens"
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    unique: true
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: token_hash
+                  type: text
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expire_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revoked
+                  type: boolean
+                  defaultValueComputed: false
+
+  - changeSet:
+      id: initial_roles
+      author: ilya
+      changes:
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: USER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: CREDIT_USER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: OVERDRAFT_USER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: DEAL_SUPERUSER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: CONTRACTOR_RUS
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: CONTRACTOR_SUPERUSER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: SUPERUSER
+              }
+        - insert:
+            tableName: roles
+            column:
+              {
+                name: role,
+                value: ADMIN
+              }
+
+
+
