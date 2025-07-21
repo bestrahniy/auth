@@ -18,6 +18,7 @@ import com.auth.dto.AuthResponseDto;
 import com.auth.dto.AuthorisateUserDto;
 import com.auth.dto.RegisterNewUserDto;
 import com.auth.dto.UserRolesDto;
+import com.auth.exception.RegistrationException;
 import com.auth.mapper.RegisterUserMapper;
 import com.auth.models.RefreshTokens;
 import com.auth.models.RoleType;
@@ -62,24 +63,28 @@ public class UserService implements UserDetailsService {
      * @throws Exception
      */
     @Transactional
-    public Users register(RegisterNewUserDto registerNewUserDto) throws Exception {
-        DateTimeFormatter dateTimeFormatter =
-            DateTimeFormatter.ofPattern("yyyy:MM::dd:HH:mm")
-                .withZone(ZoneId.systemDefault());
-        Users user = getNewregisterUser(registerNewUserDto);
-        String createdAt = dateTimeFormatter.format(user.getCreatedAt());
+    public Users register(RegisterNewUserDto registerNewUserDto) {
+        try {
+            DateTimeFormatter dateTimeFormatter =
+                DateTimeFormatter.ofPattern("yyyy:MM:dd:HH:mm")
+                    .withZone(ZoneId.systemDefault());
+            Users user = getNewregisterUser(registerNewUserDto);
+            String createdAt = dateTimeFormatter.format(user.getCreatedAt());
 
-        String passwordHash = sha256PasswordEncoder.encode(
-            user.getPassword(), user.getLogin(), createdAt
-        );
+            String passwordHash = sha256PasswordEncoder.encode(
+                user.getPassword(), user.getLogin(), createdAt
+            );
 
-        user.setPasswordHash(passwordHash);
-        user.setRoles(Set.of(
-            roleRepository.findByRole(RoleType.USER)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found"))
-        ));
+            user.setPasswordHash(passwordHash);
+            user.setRoles(Set.of(
+                roleRepository.findByRole(RoleType.USER)
+                    .orElseThrow(() -> new EntityNotFoundException("Role not found"))
+            ));
 
-        return userRepository.save(user);
+            return userRepository.save(user);
+        } catch (Exception exception) {
+            throw new RegistrationException();
+        }
     }
 
     /**
